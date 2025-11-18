@@ -100,10 +100,17 @@ return response;
 
 ---
 
-## 📝 Your API Key (Already Configured)
-```
-WEATHER_API_KEY=ccd01b43fa374e2eace170814251711
-```
+## 📝 API Key Setup
+
+You need to obtain your own API key from WeatherAPI.com:
+
+1. Sign up at https://www.weatherapi.com/ (free tier: 1M calls/month)
+2. Get your API key from the dashboard
+3. Create a `.env` file in the project root (copy from `.env.example`)
+4. Add your API key:
+   ```
+   WEATHER_API_KEY=your_api_key_here
+   ```
 
 ---
 
