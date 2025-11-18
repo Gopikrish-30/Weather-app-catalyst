@@ -20,7 +20,7 @@ This weather widget provides a beautiful, card-based UI to display real-time wea
 2. **Weather API Key** from WeatherAPI.com
    - Sign up at: https://www.weatherapi.com/
    - Free tier: 1 million calls/month
-   - Your API Key: `ccd01b43fa374e2eace170814251711`
+   - Get your own API key from the dashboard
 
 ---
 
@@ -52,8 +52,8 @@ This weather widget provides a beautiful, card-based UI to display real-time wea
 
 2. **Important Code Sections:**
    ```deluge
-   // Line 7: Your API Key (already configured)
-   apiKey = "ccd01b43fa374e2eace170814251711";
+   // Line 7: Your API Key (replace with your own)
+   apiKey = "YOUR_API_KEY_HERE";
    
    // Line 8: API URL
    apiUrl = "https://api.weatherapi.com/v1/current.json?key=" + apiKey + "&q=" + city + "&aqi=yes";
