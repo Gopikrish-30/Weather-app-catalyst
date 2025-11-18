@@ -1,0 +1,74 @@
+{
+  "defaults": {
+    "project": 3,
+    "env": 1
+  },
+  "actives": {
+    "project": 3,
+    "env": 1
+  },
+  "projects": [
+    {
+      "idx": 1,
+      "id": "55435000000012092",
+      "name": "testing",
+      "domain": {
+        "id": "10110721430",
+        "name": "testing-906244796.development"
+      },
+      "timezone": "Asia/Kolkata",
+      "env": [
+        {
+          "idx": 1,
+          "id": "906244796",
+          "name": "Development",
+          "type": 3
+        }
+      ]
+    },
+    {
+      "idx": 2,
+      "id": "55435000000013001",
+      "name": "widgetsui",
+      "domain": {
+        "id": "10110833042",
+        "name": "widgetsui-906244796.development"
+      },
+      "timezone": "Asia/Kolkata",
+      "env": [
+        {
+          "idx": 1,
+          "id": "906352413",
+          "name": "Development",
+          "type": 3
+        }
+      ]
+    },
+    {
+      "idx": 3,
+      "id": "50431000000013001",
+      "name": "widgettest",
+      "domain": {
+        "id": "10110894731",
+        "name": "widgettest-906352413.development"
+      },
+      "timezone": "Asia/Kolkata",
+      "env": [
+        {
+          "idx": 1,
+          "id": "906352413",
+          "name": "Development",
+          "type": 3,
+          "env_status": "Active",
+          "project_details": {
+            "project_name": "widgettest",
+            "id": "50431000000013001",
+            "project_type": "Live"
+          },
+          "is_default": true,
+          "action_required": false
+        }
+      ]
+    }
+  ]
+}

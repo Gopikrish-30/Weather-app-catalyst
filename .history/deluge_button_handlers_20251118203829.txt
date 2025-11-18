@@ -1,0 +1,16 @@
+// ====================================================
+// BUTTON HANDLER FUNCTIONS FOR WEATHER WIDGET
+// These functions handle button clicks and form submissions
+// ====================================================
+
+// ====================================================
+// FUNCTION 1: refreshWeather
+// Refreshes the current weather data
+// ====================================================
+response = Map();
+city = arguments.get("city");
+if(city == null || city == "") {
+    city = "London";
+}
+
+// Re-invoke the widget with same city

@@ -1,0 +1,458 @@
+// ====================================================
+// WEATHER WIDGET FOR ZOHO CLIQ - DELUGE CODE
+// Modern Card-Based UI with Weather API Integration
+// ====================================================
+
+// Get city from user input or default to London
+city = target.get("city");
+if(city == null || city == "") {
+    city = "London";
+}
+
+// ====================================================
+// FETCH WEATHER DATA FROM API
+// ====================================================
+apiKey = "ccd01b43fa374e2eace170814251711";
+apiUrl = "https://api.weatherapi.com/v1/current.json?key=" + apiKey + "&q=" + city + "&aqi=yes";
+
+try {
+    weatherResponse = invokeurl
+    [
+        url: apiUrl
+        type: GET
+    ];
+    
+    // Extract weather data
+    location = response.get("location");
+    current = response.get("current");
+    
+    cityName = location.get("name");
+    country = location.get("country");
+    region = location.get("region");
+    
+    tempC = current.get("temp_c");
+    tempF = current.get("temp_f");
+    feelsLikeC = current.get("feelslike_c");
+    humidity = current.get("humidity");
+    windKph = current.get("wind_kph");
+    windDir = current.get("wind_dir");
+    pressure = current.get("pressure_mb");
+    visibility = current.get("vis_km");
+    uvIndex = current.get("uv");
+    
+    condition = current.get("condition");
+    weatherDesc = condition.get("text");
+    weatherIcon = condition.get("icon");
+    
+    // Air Quality Index (if available)
+    airQuality = current.get("air_quality");
+    
+    // ====================================================
+    // BUILD WIDGET TABS
+    // ====================================================
+    tabs = {
+        {"label": "🌤️ Current Weather", "id": "current"},
+        {"label": "📊 Details", "id": "details"},
+        {"label": "🔍 Search", "id": "search"}
+    };
+    
+    // ====================================================
+    // BUILD SECTIONS BASED ON ACTIVE TAB
+    // ====================================================
+    activeTab = arguments.get("tab");
+    if(activeTab == null) {
+        activeTab = "current";
+    }
+    
+    sections = list();
+    
+    if(activeTab == "current") {
+        // ====================================================
+        // CURRENT WEATHER TAB - MAIN CARD VIEW
+        // ====================================================
+        
+        // Header Section
+        headerElements = list();
+        headerElements.add({
+            "type": "title",
+            "text": "Weather Dashboard"
+        });
+        headerElements.add({
+            "type": "text",
+            "text": "Real-time weather information powered by WeatherAPI.com"
+        });
+        headerElements.add({"type": "divider"});
+        
+        sections.add({
+            "id": 1,
+            "elements": headerElements
+        });
+        
+        // Main Weather Card Section
+        mainCardElements = list();
+        
+        // Location Title
+        mainCardElements.add({
+            "type": "title",
+            "text": "📍 " + cityName + ", " + country
+        });
+        
+        // Current Temperature Card
+        tempCard = {
+            "type": "card",
+            "title": weatherDesc,
+            "thumbnail": weatherIcon,
+            "theme": "modern-inline"
+        };
+        mainCardElements.add(tempCard);
+        
+        // Temperature Display
+        mainCardElements.add({
+            "type": "text",
+            "text": "**Temperature:** " + tempC + "°C (" + tempF + "°F)"
+        });
+        mainCardElements.add({
+            "type": "text",
+            "text": "**Feels Like:** " + feelsLikeC + "°C"
+        });
+        mainCardElements.add({
+            "type": "text",
+            "text": "**Condition:** " + weatherDesc
+        });
+        
+        mainCardElements.add({"type": "divider"});
+        
+        // Quick Stats in Fields
+        fields = list();
+        fields.add({"label": "💧 Humidity", "value": humidity + "%"});
+        fields.add({"label": "🌬️ Wind Speed", "value": windKph + " km/h"});
+        fields.add({"label": "🧭 Wind Direction", "value": windDir});
+        fields.add({"label": "🔬 Pressure", "value": pressure + " mb"});
+        fields.add({"label": "👁️ Visibility", "value": visibility + " km"});
+        fields.add({"label": "☀️ UV Index", "value": uvIndex});
+        
+        mainCardElements.add({
+            "type": "fields",
+            "fields": fields
+        });
+        
+        sections.add({
+            "id": 2,
+            "elements": mainCardElements
+        });
+        
+        // Action Buttons Section
+        buttonElements = list();
+        buttonElements.add({"type": "divider"});
+        buttonElements.add({
+            "type": "buttons",
+            "buttons": {
+                {
+                    "label": "🔄 Refresh",
+                    "type": "invoke.function",
+                    "name": "refreshWeather",
+                    "id": "refresh_btn"
+                },
+                {
+                    "label": "🔍 Search City",
+                    "type": "invoke.function",
+                    "name": "searchCity",
+                    "id": "search_btn"
+                }
+            }
+        });
+        
+        sections.add({
+            "id": 3,
+            "elements": buttonElements
+        });
+        
+    } else if(activeTab == "details") {
+        // ====================================================
+        // DETAILS TAB - COMPREHENSIVE WEATHER DATA
+        // ====================================================
+        
+        detailElements = list();
+        
+        detailElements.add({
+            "type": "title",
+            "text": "📊 Detailed Weather Information"
+        });
+        detailElements.add({
+            "type": "subtext",
+            "text": cityName + ", " + region + ", " + country
+        });
+        detailElements.add({"type": "divider"});
+        
+        // Temperature Details Card
+        detailElements.add({
+            "type": "text",
+            "text": "### 🌡️ Temperature Details"
+        });
+        
+        tempFields = list();
+        tempFields.add({"label": "Current Temperature", "value": tempC + "°C / " + tempF + "°F"});
+        tempFields.add({"label": "Feels Like", "value": feelsLikeC + "°C"});
+        
+        detailElements.add({
+            "type": "fields",
+            "fields": tempFields
+        });
+        
+        detailElements.add({"type": "divider"});
+        
+        // Wind Details Card
+        detailElements.add({
+            "type": "text",
+            "text": "### 🌬️ Wind Information"
+        });
+        
+        windFields = list();
+        windFields.add({"label": "Wind Speed", "value": windKph + " km/h"});
+        windFields.add({"label": "Wind Direction", "value": windDir});
+        
+        detailElements.add({
+            "type": "fields",
+            "fields": windFields
+        });
+        
+        detailElements.add({"type": "divider"});
+        
+        // Atmospheric Conditions Card
+        detailElements.add({
+            "type": "text",
+            "text": "### 🔬 Atmospheric Conditions"
+        });
+        
+        atmFields = list();
+        atmFields.add({"label": "Humidity", "value": humidity + "%"});
+        atmFields.add({"label": "Pressure", "value": pressure + " mb"});
+        atmFields.add({"label": "Visibility", "value": visibility + " km"});
+        atmFields.add({"label": "UV Index", "value": uvIndex});
+        
+        detailElements.add({
+            "type": "fields",
+            "fields": atmFields
+        });
+        
+        // Air Quality (if available)
+        if(airQuality != null) {
+            detailElements.add({"type": "divider"});
+            detailElements.add({
+                "type": "text",
+                "text": "### 💨 Air Quality Index"
+            });
+            
+            pm25 = airQuality.get("pm2_5");
+            pm10 = airQuality.get("pm10");
+            
+            if(pm25 != null) {
+                aqFields = list();
+                aqFields.add({"label": "PM2.5", "value": pm25});
+                if(pm10 != null) {
+                    aqFields.add({"label": "PM10", "value": pm10});
+                }
+                
+                detailElements.add({
+                    "type": "fields",
+                    "fields": aqFields
+                });
+            }
+        }
+        
+        sections.add({
+            "id": 1,
+            "elements": detailElements
+        });
+        
+        // Back Button
+        backElements = list();
+        backElements.add({"type": "divider"});
+        backElements.add({
+            "type": "buttons",
+            "buttons": {
+                {
+                    "label": "← Back to Current Weather",
+                    "type": "invoke.function",
+                    "name": "goToTab",
+                    "id": "back_current",
+                    "data": {"tab": "current"}
+                }
+            }
+        });
+        
+        sections.add({
+            "id": 2,
+            "elements": backElements
+        });
+        
+    } else if(activeTab == "search") {
+        // ====================================================
+        // SEARCH TAB - CITY SEARCH FORM
+        // ====================================================
+        
+        searchElements = list();
+        
+        searchElements.add({
+            "type": "title",
+            "text": "🔍 Search Weather by City"
+        });
+        searchElements.add({
+            "type": "text",
+            "text": "Enter a city name to get weather information"
+        });
+        searchElements.add({"type": "divider"});
+        
+        // Search Form
+        searchElements.add({
+            "type": "form",
+            "name": "searchWeatherForm",
+            "hint": "Search for any city worldwide",
+            "button_label": "Get Weather",
+            "inputs": {
+                {
+                    "type": "text",
+                    "name": "cityName",
+                    "label": "City Name",
+                    "hint": "e.g., London, New York, Tokyo",
+                    "placeholder": "Enter city name",
+                    "mandatory": true
+                }
+            },
+            "action": {
+                "type": "invoke.function",
+                "name": "searchWeatherByCity"
+            }
+        });
+        
+        searchElements.add({"type": "divider"});
+        
+        // Popular Cities Quick Access
+        searchElements.add({
+            "type": "text",
+            "text": "### 🌍 Popular Cities"
+        });
+        
+        searchElements.add({
+            "type": "buttons",
+            "buttons": {
+                {
+                    "label": "🇬🇧 London",
+                    "type": "invoke.function",
+                    "name": "quickSearch",
+                    "id": "london_btn",
+                    "data": {"city": "London"}
+                },
+                {
+                    "label": "🇺🇸 New York",
+                    "type": "invoke.function",
+                    "name": "quickSearch",
+                    "id": "newyork_btn",
+                    "data": {"city": "New York"}
+                }
+            }
+        });
+        
+        searchElements.add({
+            "type": "buttons",
+            "buttons": {
+                {
+                    "label": "🇯🇵 Tokyo",
+                    "type": "invoke.function",
+                    "name": "quickSearch",
+                    "id": "tokyo_btn",
+                    "data": {"city": "Tokyo"}
+                },
+                {
+                    "label": "🇮🇳 Mumbai",
+                    "type": "invoke.function",
+                    "name": "quickSearch",
+                    "id": "mumbai_btn",
+                    "data": {"city": "Mumbai"}
+                }
+            }
+        });
+        
+        searchElements.add({
+            "type": "buttons",
+            "buttons": {
+                {
+                    "label": "🇫🇷 Paris",
+                    "type": "invoke.function",
+                    "name": "quickSearch",
+                    "id": "paris_btn",
+                    "data": {"city": "Paris"}
+                },
+                {
+                    "label": "🇦🇺 Sydney",
+                    "type": "invoke.function",
+                    "name": "quickSearch",
+                    "id": "sydney_btn",
+                    "data": {"city": "Sydney"}
+                }
+            }
+        });
+        
+        sections.add({
+            "id": 1,
+            "elements": searchElements
+        });
+    }
+    
+    // ====================================================
+    // RETURN WIDGET RESPONSE
+    // ====================================================
+    return {
+        "type": "applet",
+        "tabs": tabs,
+        "active_tab": activeTab,
+        "sections": sections
+    };
+    
+} catch (e) {
+    // ====================================================
+    // ERROR HANDLING
+    // ====================================================
+    errorElements = list();
+    
+    errorElements.add({
+        "type": "title",
+        "text": "⚠️ Error Fetching Weather"
+    });
+    errorElements.add({
+        "type": "text",
+        "text": "Unable to retrieve weather data. Please check:"
+    });
+    errorElements.add({
+        "type": "text",
+        "text": "• City name is correct\n• Internet connection is stable\n• API key is valid"
+    });
+    errorElements.add({"type": "divider"});
+    errorElements.add({
+        "type": "text",
+        "text": "**Error Details:** " + e
+    });
+    errorElements.add({"type": "divider"});
+    errorElements.add({
+        "type": "buttons",
+        "buttons": {
+            {
+                "label": "🔄 Try Again",
+                "type": "invoke.function",
+                "name": "refreshWeather",
+                "id": "retry_btn"
+            }
+        }
+    });
+    
+    sections = {{"id": 1, "elements": errorElements}};
+    
+    tabs = {{"label": "Error", "id": "error"}};
+    
+    return {
+        "type": "applet",
+        "tabs": tabs,
+        "active_tab": "error",
+        "sections": sections
+    };
+}

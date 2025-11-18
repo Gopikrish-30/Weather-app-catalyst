@@ -1,0 +1,11 @@
+{
+	"deployment": {
+		"name": "widgettest_function",
+		"stack": "node20",
+		"type": "integration",
+		"env_variables": {}
+	},
+	"execution": {
+		"main": "index.js"
+	}
+}

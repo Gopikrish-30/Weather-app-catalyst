@@ -1,0 +1,81 @@
+// ====================================================
+// BUTTON HANDLER FUNCTIONS FOR WEATHER WIDGET
+// These functions handle button clicks and form submissions
+// ====================================================
+
+// ====================================================
+// FUNCTION 1: refreshWeather
+// Refreshes the current weather data
+// ====================================================
+response = Map();
+city = arguments.get("city");
+if(city == null || city == "") {
+    city = "London";
+}
+
+// Re-invoke the widget with same city
+response.put("type", "invoke.function");
+response.put("name", "weatherWidget");
+response.put("data", {"city": city, "tab": "current"});
+
+return response;
+
+// ====================================================
+// FUNCTION 2: searchCity
+// Navigates to the search tab
+// ====================================================
+response = Map();
+response.put("type", "invoke.function");
+response.put("name", "weatherWidget");
+response.put("data", {"tab": "search"});
+
+return response;
+
+// ====================================================
+// FUNCTION 3: goToTab
+// Navigates between tabs
+// ====================================================
+response = Map();
+targetTab = target.get("data").get("tab");
+city = arguments.get("city");
+
+response.put("type", "invoke.function");
+response.put("name", "weatherWidget");
+response.put("data", {"city": city, "tab": targetTab});
+
+return response;
+
+// ====================================================
+// FUNCTION 4: quickSearch
+// Quick search for popular cities
+// ====================================================
+response = Map();
+buttonData = target.get("data");
+selectedCity = buttonData.get("city");
+
+// Invoke widget with selected city
+response.put("type", "invoke.function");
+response.put("name", "weatherWidget");
+response.put("data", {"city": selectedCity, "tab": "current"});
+
+return response;
+
+// ====================================================
+// FUNCTION 5: searchWeatherByCity
+// Handles the search form submission
+// ====================================================
+response = Map();
+cityName = arguments.get("cityName");
+
+if(cityName != null && cityName != "") {
+    // Invoke widget with searched city
+    response.put("type", "invoke.function");
+    response.put("name", "weatherWidget");
+    response.put("data", {"city": cityName, "tab": "current"});
+} else {
+    // Show error message
+    response.put("type", "banner");
+    response.put("text", "⚠️ Please enter a city name");
+}
+
+return response;
